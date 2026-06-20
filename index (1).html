@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grey One Constructions — Design-Build Construction</title>
+<meta name="description" content="Grey One Constructions: design-build construction for residential and commercial projects, engineered like a blueprint, finished like a showroom.">
+
+<!-- Fonts: Big Shoulders Display (industrial/condensed, echoes the logo's slanted lettering), Manrope (clean body), JetBrains Mono (blueprint-style data/labels) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   GREY ONE CONSTRUCTIONS — design tokens
+   Palette pulled directly from the brand mark:
+   navy #343549 (ink), gold #efc018 (accent)
+   ============================================================ */
+:root{
+  /* color */
+  --navy-950:#13141d;
+  --navy-900:#1a1b29;
+  --navy-800:#23253a;
+  --navy-700:#343549;   /* brand navy */
+  --navy-600:#4a4c66;
+  --steel-400:#8c8da3;
+  --steel-200:#c9cad6;
+  --gold-600:#c89c0a;
+  --gold-500:#efc018;   /* brand gold */
+  --gold-300:#f5d65c;
+  --gold-100:#fbeebb;
+  --paper:#f6f4ef;
+  --paper-dim:#eeece4;
+  --white:#ffffff;
+
+  /* glass */
+  --glass-light-bg: rgba(255,255,255,0.55);
+  --glass-light-bd: rgba(255,255,255,0.7);
+  --glass-dark-bg: rgba(255,255,255,0.06);
+  --glass-dark-bd: rgba(255,255,255,0.14);
+
+  /* type */
+  --font-display:'Big Shoulders Display', sans-serif;
+  --font-body:'Manrope', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+
+  /* layout */
+  --maxw: 1180px;
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 10px;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--navy-700);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; }
+button{ font:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+input,select,textarea{ font:inherit; color:inherit; }
+:focus-visible{ outline:2px solid var(--gold-500); outline-offset:3px; border-radius:4px; }
+
+.go-wrap{ max-width:var(--maxw); margin-inline:auto; padding-inline:32px; }
+.go-eyebrow{
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--gold-600);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+}
+.go-eyebrow::before{
+  content:"";
+  width:7px; height:7px;
+  background:var(--gold-500);
+  border-radius:2px;
+  transform:rotate(45deg);
+  flex-shrink:0;
+}
+.go-eyebrow.on-dark{ color:var(--gold-300); }
+
+.go-h2{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:clamp(2.1rem, 4vw, 3.1rem);
+  letter-spacing:-0.01em;
+  text-transform:uppercase;
+  line-height:1.02;
+  margin-top:14px;
+}
+.go-lede{
+  font-size:1.05rem;
+  color:var(--navy-600);
+  max-width:540px;
+  margin-top:18px;
+}
+.go-section-head{ margin-bottom:56px; }
+.go-section-head.center{ text-align:center; margin-inline:auto; }
+.go-section-head.center .go-lede{ margin-inline:auto; }
+
+section{ padding:108px 0; position:relative; }
+
+/* reveal-on-scroll */
+.go-reveal{ opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+.go-reveal.is-visible{ opacity:1; transform:translateY(0); }
+
+/* generic glass surface */
+.go-glass{
+  background:var(--glass-light-bg);
+  border:1px solid var(--glass-light-bd);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:0 1px 0 rgba(255,255,255,0.8) inset, 0 20px 40px -24px rgba(52,53,73,0.25);
+}
+.go-glass-dark{
+  background:var(--glass-dark-bg);
+  border:1px solid var(--glass-dark-bd);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:0 1px 0 rgba(255,255,255,0.08) inset, 0 30px 60px -30px rgba(0,0,0,0.6);
+}
+
+/* glossy shine sweep, used on hover-able glass cards */
+.go-shine{ position:relative; overflow:hidden; }
+.go-shine::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.45) 45%, transparent 60%);
+  transform:translateX(-130%);
+  transition:transform .9s var(--ease);
+  pointer-events:none;
+}
+.go-shine:hover::after{ transform:translateX(130%); }
+
+/* buttons */
+.go-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  font-family:var(--font-mono);
+  font-weight:600; font-size:0.85rem; letter-spacing:0.04em; text-transform:uppercase;
+  padding:16px 30px;
+  border-radius:999px;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), filter .35s var(--ease);
+  white-space:nowrap;
+}
+.go-btn-gold{
+  background:linear-gradient(160deg, var(--gold-300), var(--gold-500) 55%, var(--gold-600));
+  color:var(--navy-900);
+  box-shadow:0 1px 0 rgba(255,255,255,0.6) inset, 0 14px 28px -12px rgba(200,156,10,0.65);
+}
+.go-btn-gold:hover{ transform:translateY(-3px); box-shadow:0 1px 0 rgba(255,255,255,0.7) inset, 0 20px 36px -14px rgba(200,156,10,0.8); }
+.go-btn-glass{
+  background:var(--glass-dark-bg);
+  border:1px solid var(--glass-dark-bd);
+  color:var(--white);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.go-btn-glass:hover{ background:rgba(255,255,255,0.14); transform:translateY(-3px); }
+.go-btn-outline-dark{
+  border:1.5px solid rgba(52,53,73,0.25);
+  color:var(--navy-700);
+  background:rgba(255,255,255,0.4);
+}
+.go-btn-outline-dark:hover{ border-color:var(--navy-700); transform:translateY(-3px); }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.go-nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:18px 0;
+  transition:padding .4s var(--ease), background .4s var(--ease);
+}
+.go-nav-inner{
+  max-width:var(--maxw); margin-inline:auto; padding-inline:24px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(20,21,32,0.4);
+  border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-radius:999px;
+  padding:10px 12px 10px 18px;
+  box-shadow:0 1px 0 rgba(255,255,255,0.08) inset, 0 18px 40px -22px rgba(0,0,0,0.5);
+  transition:background .4s var(--ease);
+}
+.go-nav.is-scrolled .go-nav-inner{ background:rgba(20,21,32,0.72); }
+
+.go-logo{ display:flex; align-items:center; gap:12px; }
+.go-logo-mark{ width:30px; height:30px; position:relative; flex-shrink:0; }
+.go-logo-mark span{ position:absolute; width:13px; height:13px; }
+.go-logo-mark .s-circ{ top:0; left:0; border-radius:50%; background:var(--navy-700); }
+.go-logo-mark .s-sq{ top:0; right:0; background:var(--gold-500); border-radius:2px; }
+.go-logo-mark .s-rect{ bottom:0; left:0; width:13px; height:13px; background:var(--gold-500); border-radius:2px; clip-path:inset(0 0 0 0); }
+.go-logo-mark .s-tri{ bottom:0; right:0; width:0; height:0; border-left:6.5px solid transparent; border-right:6.5px solid transparent; border-bottom:13px solid var(--navy-700); }
+.go-logo-word{
+  font-family:var(--font-display); font-weight:800; text-transform:uppercase;
+  font-size:1.05rem; letter-spacing:0.01em; color:var(--white);
+  transform:skewX(-6deg);
+}
+.go-logo-word b{ color:var(--gold-400, var(--gold-500)); font-weight:800; }
+
+.go-nav-links{ display:flex; align-items:center; gap:30px; }
+.go-nav-links a{
+  font-family:var(--font-mono); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;
+  color:rgba(255,255,255,0.78); transition:color .25s;
+  position:relative;
+}
+.go-nav-links a::after{
+  content:""; position:absolute; left:0; bottom:-6px; height:1px; width:0;
+  background:var(--gold-500); transition:width .3s var(--ease);
+}
+.go-nav-links a:hover{ color:var(--white); }
+.go-nav-links a:hover::after{ width:100%; }
+
+.go-nav-cta{ display:flex; align-items:center; gap:14px; }
+.go-burger{ display:none; width:40px; height:40px; border-radius:50%; align-items:center; justify-content:center; color:var(--white); }
+.go-burger span, .go-burger span::before, .go-burger span::after{
+  content:""; display:block; width:18px; height:2px; background:currentColor; position:relative; transition:transform .3s, opacity .3s;
+}
+.go-burger span::before{ position:absolute; top:-6px; }
+.go-burger span::after{ position:absolute; top:6px; }
+
+.go-mobile-panel{
+  display:none;
+  position:fixed; top:78px; left:16px; right:16px; z-index:99;
+  background:rgba(20,21,32,0.92);
+  border:1px solid rgba(255,255,255,0.12);
+  backdrop-filter:blur(22px);
+  border-radius:22px;
+  padding:14px;
+  flex-direction:column;
+  gap:4px;
+  transform:translateY(-12px); opacity:0; pointer-events:none;
+  transition:transform .35s var(--ease), opacity .35s var(--ease);
+}
+.go-mobile-panel.is-open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+.go-mobile-panel a{
+  color:rgba(255,255,255,0.85); font-family:var(--font-mono); text-transform:uppercase; font-size:0.85rem;
+  padding:14px 12px; border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.go-mobile-panel a:last-child{ border-bottom:none; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.go-hero{
+  min-height:100vh;
+  display:flex; align-items:center;
+  padding-top:140px; padding-bottom:90px;
+  background:
+    radial-gradient(900px 480px at 14% -6%, rgba(239,192,24,0.16), transparent 60%),
+    radial-gradient(1000px 600px at 100% 10%, rgba(255,255,255,0.06), transparent 55%),
+    linear-gradient(180deg, var(--navy-950), var(--navy-900) 60%, var(--navy-800));
+  color:var(--white);
+  overflow:hidden;
+}
+.go-hero-bp{ /* faint blueprint grid */
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 30%, black, transparent 75%);
+  pointer-events:none;
+}
+.go-hero-inner{
+  max-width:var(--maxw); margin-inline:auto; padding-inline:32px;
+  display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center;
+  position:relative; z-index:2;
+}
+.go-hero-headline{
+  font-family:var(--font-display); font-weight:900; text-transform:uppercase;
+  font-size:clamp(2.8rem, 5.6vw, 4.6rem); line-height:0.96; letter-spacing:-0.01em;
+  margin-top:20px;
+}
+.go-hero-headline .accent{
+  background:linear-gradient(100deg, var(--gold-300), var(--gold-500) 60%, var(--gold-600));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  display:inline-block; transform:skewX(-4deg);
+}
+.go-hero-lede{ margin-top:24px; max-width:480px; color:var(--steel-200); font-size:1.08rem; }
+.go-hero-ctas{ margin-top:38px; display:flex; gap:16px; flex-wrap:wrap; }
+
+.go-hero-art{
+  position:relative; height:420px;
+  display:flex; align-items:center; justify-content:center;
+}
+.go-art-stage{
+  position:relative; width:300px; height:300px;
+  transform-style:preserve-3d;
+}
+.go-art-piece{
+  position:absolute; border-radius:18px;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.35);
+  box-shadow:0 1px 0 rgba(255,255,255,0.4) inset, 0 30px 50px -20px rgba(0,0,0,0.55);
+  opacity:0; transform:translateY(40px) scale(0.85);
+  animation:goPieceIn 1s var(--ease) forwards;
+}
+.go-art-piece.p-circ{
+  width:128px; height:128px; top:0; left:0; border-radius:50%;
+  background:linear-gradient(155deg, rgba(74,76,102,0.9), rgba(35,37,58,0.85));
+  animation-delay:.15s;
+}
+.go-art-piece.p-sq{
+  width:128px; height:128px; top:0; right:0;
+  background:linear-gradient(155deg, var(--gold-300), var(--gold-600));
+  animation-delay:.35s;
+}
+.go-art-piece.p-rect{
+  width:128px; height:172px; bottom:0; left:0;
+  background:linear-gradient(155deg, var(--gold-300), var(--gold-600));
+  animation-delay:.55s;
+}
+.go-art-piece.p-tri{
+  width:140px; height:172px; bottom:0; right:-6px;
+  clip-path:polygon(50% 0%, 100% 100%, 0% 100%);
+  background:linear-gradient(165deg, rgba(74,76,102,0.95), rgba(35,37,58,0.9));
+  border-radius:10px;
+  animation-delay:.75s;
+}
+.go-art-piece::after{ /* sheen */
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background:linear-gradient(135deg, rgba(255,255,255,0.35), transparent 45%);
+  mix-blend-mode:overlay;
+}
+@keyframes goPieceIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+.go-art-stage.is-settled .go-art-piece{ animation:none; opacity:1; transform:translateY(0) scale(1); }
+.go-art-stage.is-settled .go-art-piece{ animation:goFloat 6s ease-in-out infinite; }
+.go-art-stage.is-settled .p-sq{ animation-delay:.3s; }
+.go-art-stage.is-settled .p-rect{ animation-delay:.9s; }
+.go-art-stage.is-settled .p-tri{ animation-delay:1.5s; }
+@keyframes goFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+
+/* ============================================================
+   STATS STRIP
+   ============================================================ */
+.go-stats{
+  padding:0; background:var(--navy-900);
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.go-stats-inner{
+  max-width:var(--maxw); margin-inline:auto; padding:40px 32px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+}
+.go-stat{ text-align:center; }
+.go-stat-num{
+  font-family:var(--font-mono); font-weight:600; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--gold-300);
+}
+.go-stat-label{
+  font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--steel-400); margin-top:6px;
+}
+
+/* ============================================================
+   FEATURES
+   ============================================================ */
+.go-features{ background:var(--paper); }
+.go-feature-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+.go-feature-card{
+  padding:32px 28px; border-radius:var(--radius-md);
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.go-feature-card:hover{ transform:translateY(-6px); }
+.go-feature-icon{
+  width:52px; height:52px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(155deg, var(--navy-600), var(--navy-700));
+  box-shadow:0 1px 0 rgba(255,255,255,0.15) inset, 0 12px 22px -10px rgba(52,53,73,0.5);
+  margin-bottom:20px;
+}
+.go-feature-icon svg{ width:24px; height:24px; stroke:var(--gold-300); }
+.go-feature-card h3{
+  font-family:var(--font-display); text-transform:uppercase; font-weight:800; font-size:1.25rem; letter-spacing:0.01em;
+}
+.go-feature-card p{ margin-top:10px; color:var(--navy-600); font-size:0.96rem; }
+
+/* ============================================================
+   SHOWCASE
+   ============================================================ */
+.go-showcase{ background:var(--paper-dim); }
+.go-showcase-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:28px; }
+.go-project-card{
+  border-radius:var(--radius-lg); overflow:hidden;
+  transition:transform .45s var(--ease), box-shadow .45s var(--ease);
+}
+.go-project-card:hover{ transform:translateY(-8px); }
+.go-project-art{
+  height:230px; position:relative; overflow:hidden;
+  background:linear-gradient(160deg, var(--navy-800), var(--navy-950));
+}
+.go-project-art .grid-lines{
+  position:absolute; inset:0;
+  background-image:linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size:30px 30px;
+}
+.go-project-art .blocks{ position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; gap:14px; padding:30px; }
+.go-project-art .blocks i{ display:block; border-radius:6px; box-shadow:0 1px 0 rgba(255,255,255,0.25) inset; transition:transform .5s var(--ease); }
+.go-project-card:hover .blocks i{ transform:translateY(-6px); }
+.go-project-body{ padding:24px 26px 28px; }
+.go-project-tag{ font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-600); }
+.go-project-body h3{ font-family:var(--font-display); font-weight:800; text-transform:uppercase; font-size:1.4rem; margin-top:8px; }
+.go-project-body p{ color:var(--navy-600); font-size:0.92rem; margin-top:6px; }
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.go-testimonials{
+  background:linear-gradient(180deg, var(--navy-900), var(--navy-950));
+  color:var(--white);
+}
+.go-test-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+.go-test-card{
+  padding:30px 26px; border-radius:var(--radius-md); display:flex; flex-direction:column; height:100%;
+}
+.go-test-quote{ font-size:1.02rem; color:var(--steel-200); flex-grow:1; }
+.go-test-quote::before{ content:"“"; color:var(--gold-400, var(--gold-500)); font-size:1.4rem; }
+.go-test-person{ display:flex; align-items:center; gap:12px; margin-top:22px; }
+.go-test-avatar{
+  width:40px; height:40px; border-radius:50%;
+  background:linear-gradient(155deg, var(--gold-300), var(--gold-600));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:800; color:var(--navy-900);
+}
+.go-test-person strong{ font-size:0.92rem; display:block; }
+.go-test-person span{ font-family:var(--font-mono); font-size:0.74rem; color:var(--steel-400); }
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+.go-pricing{ background:var(--paper); }
+.go-price-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; align-items:stretch; }
+.go-price-card{
+  padding:36px 30px; border-radius:var(--radius-lg);
+  display:flex; flex-direction:column;
+  transition:transform .4s var(--ease);
+}
+.go-price-card:hover{ transform:translateY(-6px); }
+.go-price-card.is-featured{
+  background:linear-gradient(165deg, var(--navy-700), var(--navy-900));
+  color:var(--white);
+  border:1px solid rgba(255,255,255,0.14);
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset, 0 30px 60px -24px rgba(35,37,58,0.55);
+  transform:scale(1.04);
+}
+.go-price-card.is-featured:hover{ transform:scale(1.04) translateY(-6px); }
+.go-price-badge{
+  width:46px; height:46px; margin-bottom:18px;
+  display:flex; align-items:center; justify-content:center;
+}
+.go-price-badge .shape{ display:block; }
+.shape-circle{ width:30px; height:30px; border-radius:50%; background:var(--navy-700); }
+.is-featured .shape-circle{ background:var(--gold-500); }
+.shape-square{ width:28px; height:28px; border-radius:6px; background:var(--gold-500); }
+.shape-tri{ width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:28px solid var(--navy-700); }
+.is-featured .shape-tri{ border-bottom-color:var(--gold-500); }
+.go-price-tier{ font-family:var(--font-mono); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold-600); }
+.is-featured .go-price-tier{ color:var(--gold-300); }
+.go-price-name{ font-family:var(--font-display); font-weight:900; text-transform:uppercase; font-size:1.7rem; margin-top:6px; }
+.go-price-for{ font-size:0.88rem; color:var(--navy-600); margin-top:6px; }
+.is-featured .go-price-for{ color:var(--steel-200); }
+.go-price-amount{ font-family:var(--font-display); font-weight:800; font-size:2.2rem; margin-top:22px; }
+.go-price-amount span{ font-family:var(--font-mono); font-size:0.85rem; font-weight:400; color:var(--navy-600); text-transform:none; }
+.is-featured .go-price-amount span{ color:var(--steel-400); }
+.go-price-list{ margin-top:24px; display:flex; flex-direction:column; gap:12px; flex-grow:1; }
+.go-price-list li{ font-size:0.92rem; display:flex; gap:10px; align-items:flex-start; }
+.go-price-list li svg{ width:16px; height:16px; flex-shrink:0; margin-top:3px; stroke:var(--gold-600); }
+.is-featured .go-price-list li svg{ stroke:var(--gold-300); }
+.go-price-card .go-btn{ margin-top:28px; width:100%; }
+.go-price-pill{
+  font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em;
+  background:var(--gold-500); color:var(--navy-900); padding:5px 12px; border-radius:999px;
+  align-self:flex-start; margin-bottom:14px; font-weight:600;
+}
+
+/* ============================================================
+   CONTACT + FOOTER
+   ============================================================ */
+.go-contact{
+  background:
+    radial-gradient(700px 400px at 90% 0%, rgba(239,192,24,0.1), transparent 60%),
+    linear-gradient(180deg, var(--navy-950), var(--navy-900));
+  color:var(--white);
+}
+.go-contact-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; }
+.go-contact-info{ padding-top:8px; }
+.go-contact-list{ margin-top:32px; display:flex; flex-direction:column; gap:20px; }
+.go-contact-list li{ font-size:0.95rem; color:var(--steel-200); }
+.go-contact-list strong{ display:block; font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-300); margin-bottom:4px; }
+
+.go-form{ padding:34px; border-radius:var(--radius-lg); }
+.go-form-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.go-field{ margin-bottom:18px; display:flex; flex-direction:column; gap:8px; }
+.go-field label{ font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--steel-400); }
+.go-field input, .go-field select, .go-field textarea{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:12px;
+  padding:13px 16px;
+  color:var(--white);
+  transition:border-color .25s, background .25s;
+}
+.go-field input::placeholder, .go-field textarea::placeholder{ color:rgba(255,255,255,0.35); }
+.go-field input:focus, .go-field select:focus, .go-field textarea:focus{
+  border-color:var(--gold-500); background:rgba(255,255,255,0.1); outline:none;
+}
+.go-field select option{ background:var(--navy-900); }
+.go-field textarea{ resize:vertical; min-height:100px; }
+.go-form-msg{
+  margin-top:14px; padding:14px 16px; border-radius:12px;
+  background:rgba(239,192,24,0.14); border:1px solid rgba(239,192,24,0.35);
+  font-size:0.88rem; color:var(--gold-300);
+  display:none;
+}
+.go-form-msg.is-shown{ display:block; }
+
+.go-footer{ background:var(--navy-950); color:var(--steel-400); padding:56px 0 28px; }
+.go-footer-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:32px; padding-bottom:36px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.go-footer-cols{ display:flex; gap:64px; flex-wrap:wrap; }
+.go-footer-col h4{ font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--steel-200); margin-bottom:14px; }
+.go-footer-col a{ display:block; font-size:0.88rem; color:var(--steel-400); margin-bottom:10px; transition:color .25s; }
+.go-footer-col a:hover{ color:var(--gold-300); }
+.go-footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:24px; flex-wrap:wrap; gap:12px; font-size:0.82rem; }
+.go-footer-tagline{ max-width:280px; color:var(--steel-400); font-size:0.9rem; margin-top:14px; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:980px){
+  .go-hero-inner{ grid-template-columns:1fr; text-align:center; }
+  .go-hero-lede{ margin-inline:auto; }
+  .go-hero-ctas{ justify-content:center; }
+  .go-hero-art{ height:320px; }
+  .go-feature-grid{ grid-template-columns:repeat(2,1fr); }
+  .go-showcase-grid{ grid-template-columns:1fr; }
+  .go-test-grid{ grid-template-columns:1fr; }
+  .go-price-grid{ grid-template-columns:1fr; max-width:420px; margin-inline:auto; }
+  .go-price-card.is-featured{ transform:none; order:-1; }
+  .go-price-card.is-featured:hover{ transform:translateY(-6px); }
+  .go-contact-grid{ grid-template-columns:1fr; gap:40px; }
+  .go-stats-inner{ grid-template-columns:repeat(2,1fr); }
+  .go-nav-links{ display:none; }
+  .go-burger{ display:flex; }
+  .go-mobile-panel{ display:flex; }
+}
+@media (max-width:620px){
+  section{ padding:76px 0; }
+  .go-wrap, .go-hero-inner, .go-nav-inner{ padding-inline:18px; }
+  .go-feature-grid{ grid-template-columns:1fr; }
+  .go-form-row{ grid-template-columns:1fr; }
+  .go-footer-cols{ gap:36px; }
+  .go-nav-cta .go-btn-glass span{ display:none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="go-nav" id="goNav">
+  <div class="go-nav-inner">
+    <a href="#top" class="go-logo">
+      <span class="go-logo-mark">
+        <span class="s-circ"></span><span class="s-sq"></span><span class="s-rect"></span><span class="s-tri"></span>
+      </span>
+      <span class="go-logo-word">Grey <b>One</b></span>
+    </a>
+    <div class="go-nav-links">
+      <a href="#features">Services</a>
+      <a href="#showcase">Work</a>
+      <a href="#testimonials">Clients</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="go-nav-cta">
+      <a href="#contact" class="go-btn go-btn-glass"><span>Get a Quote</span></a>
+      <button class="go-burger" id="goBurger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+      </button>
+    </div>
+  </div>
+  <div class="go-mobile-panel" id="goMobilePanel">
+    <a href="#features">Services</a>
+    <a href="#showcase">Work</a>
+    <a href="#testimonials">Clients</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <header class="go-hero">
+    <div class="go-hero-bp" aria-hidden="true"></div>
+    <div class="go-hero-inner">
+      <div>
+        <span class="go-eyebrow on-dark">Design • Build • Deliver</span>
+        <h1 class="go-hero-headline">Built on<br><span class="accent">precision.</span></h1>
+        <p class="go-hero-lede">Grey One Constructions is a design-build studio for residential and commercial projects — engineered like a blueprint, finished like a showroom.</p>
+        <div class="go-hero-ctas">
+          <a href="#contact" class="go-btn go-btn-gold">Start Your Project</a>
+          <a href="#showcase" class="go-btn go-btn-glass"><span>View Our Work</span></a>
+        </div>
+      </div>
+      <div class="go-hero-art">
+        <div class="go-art-stage" id="goArtStage">
+          <div class="go-art-piece p-circ"></div>
+          <div class="go-art-piece p-sq"></div>
+          <div class="go-art-piece p-rect"></div>
+          <div class="go-art-piece p-tri"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       STATS STRIP
+       ============================================================ -->
+  <section class="go-stats" aria-label="Company stats">
+    <div class="go-stats-inner">
+      <div class="go-stat go-reveal">
+        <div class="go-stat-num" data-count="30" data-suffix="+">0</div>
+        <div class="go-stat-label">Projects Delivered</div>
+      </div>
+      <div class="go-stat go-reveal">
+        <div class="go-stat-num" data-count="3" data-suffix="+">0</div>
+        <div class="go-stat-label">Years in Practice</div>
+      </div>
+      <div class="go-stat go-reveal">
+        <div class="go-stat-num" data-count="10" data-suffix="K+">0</div>
+        <div class="go-stat-label">Sq Ft Built</div>
+      </div>
+      <div class="go-stat go-reveal">
+        <div class="go-stat-num" data-count="98" data-suffix="%">0</div>
+        <div class="go-stat-label">On-Time Rate</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FEATURES
+       ============================================================ -->
+  <section class="go-features" id="features">
+    <div class="go-wrap">
+      <div class="go-section-head go-reveal">
+        <span class="go-eyebrow">What We Build</span>
+        <h2 class="go-h2">Every project, framed<br>before it's poured.</h2>
+        <p class="go-lede">Six disciplines, one team — from the first sketch to the final walkthrough.</p>
+      </div>
+      <div class="go-feature-grid">
+
+        <div class="go-feature-card go-glass go-reveal">
+          <div class="go-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <h3>Residential Construction</h3>
+          <p>Custom homes built from foundation to finish, engineered for the long haul.</p>
+        </div>
+
+        <div class="go-feature-card go-glass go-reveal">
+          <div class="go-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h.01M14 8h.01M9 12h.01M14 12h.01M9 16h.01M14 16h.01"/></svg>
+          </div>
+          <h3>Commercial Build-Outs</h3>
+          <p>Offices, retail, and hospitality spaces shaped around how people actually work.</p>
+        </div>
+
+        <div class="go-feature-card go-glass go-reveal">
+          <div class="go-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-9 9H5v-6z"/><path d="M12.5 5.5l6 6"/></svg>
+          </div>
+          <h3>Renovation &amp; Additions</h3>
+          <p>Structural changes done right, without disrupting the rest of your life.</p>
+        </div>
+
+        <div class="go-feature-card go-glass go-reveal">
+          <div class="go-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 12h8M8 16h5"/></svg>
+          </div>
+          <h3>Architecture &amp; Design</h3>
+          <p>In-house drafting and 3D modeling before a single beam goes up.</p>
+        </div>
+
+        <div class="go-feature-card go-glass go-reveal">
+          <div class="go-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 3v2h6V3M9 11l2 2 4-4"/></svg>
+          </div>
+          <h3>Project Management</h3>
+          <p>One point of contact, one schedule, zero surprises.</p>
+        </div>
+
+        <div class="go-feature-card go-glass go-reveal">
+          <div class="go-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11z"/><path d="M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+          </div>
+          <h3>Sustainable Building</h3>
+          <p>Materials and methods that cut waste and lower long-term costs.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SHOWCASE
+       ============================================================ -->
+  <section class="go-showcase" id="showcase">
+    <div class="go-wrap">
+      <div class="go-section-head go-reveal">
+        <span class="go-eyebrow">Selected Work</span>
+        <h2 class="go-h2">Recently broken<br>ground &amp; finished.</h2>
+        <p class="go-lede">A small sample of what's gone from drawing to door.</p>
+      </div>
+      <div class="go-showcase-grid">
+
+        <div class="go-project-card go-glass go-reveal">
+          <div class="go-project-art">
+            <div class="grid-lines"></div>
+            <div class="blocks">
+              <i style="width:46px;height:120px;background:linear-gradient(160deg,var(--navy-600),var(--navy-800));"></i>
+              <i style="width:46px;height:170px;background:linear-gradient(160deg,var(--gold-300),var(--gold-600));"></i>
+              <i style="width:46px;height:90px;background:linear-gradient(160deg,var(--navy-600),var(--navy-800));"></i>
+            </div>
+          </div>
+          <div class="go-project-body">
+            <span class="go-project-tag">Private Residential — 2024</span>
+            <h3>Maple Ridge Residence</h3>
+            <p>A five-bedroom new build set into a sloped lot, designed around the view.</p>
+          </div>
+        </div>
+
+        <div class="go-project-card go-glass go-reveal">
+          <div class="go-project-art">
+            <div class="grid-lines"></div>
+            <div class="blocks">
+              <i style="width:60px;height:150px;background:linear-gradient(160deg,var(--gold-300),var(--gold-600));"></i>
+              <i style="width:36px;height:200px;background:linear-gradient(160deg,var(--navy-600),var(--navy-800));"></i>
+            </div>
+          </div>
+          <div class="go-project-body">
+            <span class="go-project-tag">Commercial — 2023</span>
+            <h3>Foundry District Offices</h3>
+            <p>A 40,000 sq ft adaptive-reuse office build-out inside a former warehouse.</p>
+          </div>
+        </div>
+
+        <div class="go-project-card go-glass go-reveal">
+          <div class="go-project-art">
+            <div class="grid-lines"></div>
+            <div class="blocks">
+              <i style="width:50px;height:80px;background:linear-gradient(160deg,var(--navy-600),var(--navy-800));"></i>
+              <i style="width:50px;height:140px;background:linear-gradient(160deg,var(--gold-300),var(--gold-600));"></i>
+              <i style="width:50px;height:100px;background:linear-gradient(160deg,var(--navy-600),var(--navy-800));"></i>
+            </div>
+          </div>
+          <div class="go-project-body">
+            <span class="go-project-tag">Renovation — 2023</span>
+            <h3>Birchwood Addition</h3>
+            <p>A second-storey addition and full kitchen rebuild, lived-in throughout.</p>
+          </div>
+        </div>
+
+        <div class="go-project-card go-glass go-reveal">
+          <div class="go-project-art">
+            <div class="grid-lines"></div>
+            <div class="blocks">
+              <i style="width:70px;height:110px;background:linear-gradient(160deg,var(--gold-300),var(--gold-600));"></i>
+              <i style="width:40px;height:180px;background:linear-gradient(160deg,var(--navy-600),var(--navy-800));"></i>
+            </div>
+          </div>
+          <div class="go-project-body">
+            <span class="go-project-tag">Commercial — 2022</span>
+            <h3>Union Street Retail</h3>
+            <p>A ground-floor retail strip with a full glass storefront system.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TESTIMONIALS
+       ============================================================ -->
+  <section class="go-testimonials" id="testimonials">
+    <div class="go-wrap">
+      <div class="go-section-head center go-reveal">
+        <span class="go-eyebrow on-dark">Clients</span>
+        <h2 class="go-h2">Said after the<br>dust settled.</h2>
+      </div>
+      <div class="go-test-grid">
+
+        <div class="go-test-card go-glass-dark go-reveal">
+          <p class="go-test-quote">They treated our renovation like it was their own house. Every wall and wire ended up exactly where it should be.</p>
+          <div class="go-test-person">
+            <div class="go-test-avatar">MK</div>
+            <div><strong>Maren Kessler</strong><span>Maple Ridge Residence</span></div>
+          </div>
+        </div>
+
+        <div class="go-test-card go-glass-dark go-reveal">
+          <p class="go-test-quote">Grey One brought the drawings to life faster than we'd budgeted for. The schedule never slipped, not once.</p>
+          <div class="go-test-person">
+            <div class="go-test-avatar">DO</div>
+            <div><strong>Daniel Ortega</strong><span>Foundry District Offices</span></div>
+          </div>
+        </div>
+
+        <div class="go-test-card go-glass-dark go-reveal">
+          <p class="go-test-quote">No surprise change orders, no missed calls. Just a finished building, on the date they promised.</p>
+          <div class="go-test-person">
+            <div class="go-test-avatar">PA</div>
+            <div><strong>Priya Anand</strong><span>Union Street Retail</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRICING
+       ============================================================ -->
+  <section class="go-pricing" id="pricing">
+    <div class="go-wrap">
+      <div class="go-section-head center go-reveal">
+        <span class="go-eyebrow">Project Tiers</span>
+        <h2 class="go-h2">From foundation<br>to penthouse.</h2>
+        <p class="go-lede">Every estimate is scoped to the job — these are starting points, named for how a building actually goes up.</p>
+      </div>
+      <div class="go-price-grid">
+
+        <div class="go-price-card go-glass go-reveal">
+          <div class="go-price-badge"><span class="shape shape-circle"></span></div>
+          <span class="go-price-tier">Foundation</span>
+          <h3 class="go-price-name">Renovate</h3>
+          <p class="go-price-for">For renovations &amp; additions</p>
+          <div class="go-price-amount">$25K <span>starting at</span></div>
+          <ul class="go-price-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Single point of contact</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>In-house design consult</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Up to 3 revision rounds</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Standard materials package</li>
+          </ul>
+          <a href="#contact" class="go-btn go-btn-outline-dark">Request a Quote</a>
+        </div>
+
+        <div class="go-price-card go-glass-dark is-featured go-reveal">
+          <span class="go-price-pill">Most Requested</span>
+          <div class="go-price-badge"><span class="shape shape-square"></span></div>
+          <span class="go-price-tier">Structure</span>
+          <h3 class="go-price-name">Build</h3>
+          <p class="go-price-for">For new builds &amp; build-outs</p>
+          <div class="go-price-amount">$150K <span>starting at</span></div>
+          <ul class="go-price-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Dedicated project manager</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Full architectural drafting</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Up to 6 revision rounds</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Premium materials package</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Quarterly progress reporting</li>
+          </ul>
+          <a href="#contact" class="go-btn go-btn-gold">Request a Quote</a>
+        </div>
+
+        <div class="go-price-card go-glass go-reveal">
+          <div class="go-price-badge"><span class="shape shape-tri"></span></div>
+          <span class="go-price-tier">Penthouse</span>
+          <h3 class="go-price-name">Custom</h3>
+          <p class="go-price-for">For custom &amp; high-spec projects</p>
+          <div class="go-price-amount">$400K <span>starting at</span></div>
+          <ul class="go-price-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Senior principal oversight</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Bespoke design &amp; 3D modeling</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Unlimited revisions</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Curated materials sourcing</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Weekly on-site walkthroughs</li>
+          </ul>
+          <a href="#contact" class="go-btn go-btn-outline-dark">Request a Quote</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section class="go-contact" id="contact">
+    <div class="go-wrap">
+      <div class="go-contact-grid">
+
+        <div class="go-contact-info go-reveal">
+          <span class="go-eyebrow on-dark">Get In Touch</span>
+          <h2 class="go-h2">Let's break<br>ground.</h2>
+          <p class="go-lede" style="color:var(--steel-200);">Tell us about the site, the scope, and the timeline. We'll come back with a real plan, not a placeholder.</p>
+          <ul class="go-contact-list">
+            <li><strong>Serving</strong>The Nilgiris &amp; Coimbatore</li>
+            <li><strong>Phone</strong>+91 63747 76570</li>
+            <li><strong>Email</strong>info@greyoneconstruction.com</li>
+            <li><strong>Hours</strong>Mon – Fri, 7:00 AM – 5:00 PM</li>
+          </ul>
+        </div>
+
+        <form class="go-form go-glass-dark go-reveal" id="goForm">
+          <div class="go-form-row">
+            <div class="go-field">
+              <label for="goName">Name</label>
+              <input id="goName" type="text" placeholder="Your full name" required>
+            </div>
+            <div class="go-field">
+              <label for="goEmail">Email</label>
+              <input id="goEmail" type="email" placeholder="you@email.com" required>
+            </div>
+          </div>
+          <div class="go-field">
+            <label for="goType">Project type</label>
+            <select id="goType">
+              <option>Residential</option>
+              <option>Commercial</option>
+              <option>Renovation</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="go-field">
+            <label for="goMsg">Project details</label>
+            <textarea id="goMsg" placeholder="Site address, rough scope, and ideal timeline." required></textarea>
+          </div>
+          <button type="submit" class="go-btn go-btn-gold" style="width:100%;">Send Inquiry</button>
+          <div class="go-form-msg" id="goFormMsg">Thanks — your inquiry has been noted. We'll follow up within one business day.</div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="go-footer">
+  <div class="go-wrap">
+    <div class="go-footer-top">
+      <div>
+        <a href="#top" class="go-logo">
+          <span class="go-logo-mark">
+            <span class="s-circ"></span><span class="s-sq"></span><span class="s-rect"></span><span class="s-tri"></span>
+          </span>
+          <span class="go-logo-word">Grey <b>One</b></span>
+        </a>
+        <p class="go-footer-tagline">Design-build construction for residential and commercial projects.</p>
+      </div>
+      <div class="go-footer-cols">
+        <div class="go-footer-col">
+          <h4>Sitemap</h4>
+          <a href="#features">Services</a>
+          <a href="#showcase">Work</a>
+          <a href="#testimonials">Clients</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+        <div class="go-footer-col">
+          <h4>Company</h4>
+          <a href="#contact">Contact</a>
+          <a href="#top">Careers</a>
+          <a href="#top">Licensing</a>
+        </div>
+        <div class="go-footer-col">
+          <h4>Follow</h4>
+          <a href="#top">Instagram</a>
+          <a href="#top">LinkedIn</a>
+          <a href="#top">Houzz</a>
+        </div>
+      </div>
+    </div>
+    <div class="go-footer-bottom">
+      <span>© 2026 Grey One Constructions. All rights reserved.</span>
+      <span>Built in-house, like everything else.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Nav: blur/shadow once page scrolls past hero top ---- */
+  var nav = document.getElementById('goNav');
+  function onScroll(){
+    if(window.scrollY > 40){ nav.classList.add('is-scrolled'); }
+    else{ nav.classList.remove('is-scrolled'); }
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  /* ---- Mobile menu toggle ---- */
+  var burger = document.getElementById('goBurger');
+  var panel = document.getElementById('goMobilePanel');
+  burger.addEventListener('click', function(){
+    var open = panel.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  panel.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ panel.classList.remove('is-open'); burger.setAttribute('aria-expanded','false'); });
+  });
+
+  /* ---- Scroll reveal ---- */
+  var revealEls = document.querySelectorAll('.go-reveal');
+  if('IntersectionObserver' in window && !reduceMotion){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold:0.15, rootMargin:'0px 0px -40px 0px' });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* ---- Hero shapes: settle once, then gentle float ---- */
+  var stage = document.getElementById('goArtStage');
+  if(stage){
+    window.setTimeout(function(){ stage.classList.add('is-settled'); }, 1300);
+
+    if(!reduceMotion){
+      var heroArt = document.querySelector('.go-hero-art');
+      heroArt.addEventListener('mousemove', function(e){
+        var rect = heroArt.getBoundingClientRect();
+        var x = (e.clientX - rect.left) / rect.width - 0.5;
+        var y = (e.clientY - rect.top) / rect.height - 0.5;
+        stage.style.transform = 'rotateY(' + (x*8) + 'deg) rotateX(' + (y*-8) + 'deg)';
+      });
+      heroArt.addEventListener('mouseleave', function(){
+        stage.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
+    }
+  }
+
+  /* ---- Count-up stats ---- */
+  var statEls = document.querySelectorAll('.go-stat-num');
+  function animateCount(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    var suffix = el.getAttribute('data-suffix') || '';
+    var isDecimal = String(target).indexOf('.') !== -1;
+    var duration = 1400;
+    var start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = target * eased;
+      el.textContent = (isDecimal ? current.toFixed(1) : Math.round(current)) + suffix;
+      if(progress < 1){ requestAnimationFrame(step); }
+    }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window){
+    var statIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          animateCount(entry.target);
+          statIo.unobserve(entry.target);
+        }
+      });
+    }, { threshold:0.6 });
+    statEls.forEach(function(el){ statIo.observe(el); });
+  } else {
+    statEls.forEach(function(el){ el.textContent = el.getAttribute('data-count') + (el.getAttribute('data-suffix')||''); });
+  }
+
+  /* ---- Contact form: client-side only confirmation ---- */
+  var form = document.getElementById('goForm');
+  var msg = document.getElementById('goFormMsg');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    msg.classList.add('is-shown');
+    form.reset();
+    msg.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'nearest' });
+  });
+
+})();
+</script>
+
+</body>
+</html>
